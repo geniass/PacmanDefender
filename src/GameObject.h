@@ -3,19 +3,23 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <memory>
+
+using namespace std;
 
 class GameObject
 {
 public:
-    GameObject(sf::Vector2f pos, sf::Vector2f vel) : _postion{pos}, _velocity{vel} {};
+    GameObject(sf::Vector2f pos, sf::Vector2f vel) : _position{pos}, _velocity{vel} {};
     ~GameObject() {};
     enum class Direction {Left, Right}; // it's a side-scroller
     virtual void update(float dt) {};
-    sf::Sprite& getSprite() { return _sprite; };
+    shared_ptr<sf::Sprite> getSprite() { return _sprite; };
+
 protected:
-    sf::Texture _texture;
-    sf::Sprite _sprite;
-    sf::Vector2f _postion;
+    shared_ptr<sf::Texture> _texture = make_shared<sf::Texture>();
+    shared_ptr<sf::Sprite> _sprite = make_shared<sf::Sprite>();
+    sf::Vector2f _position;
     sf::Vector2f _velocity;
     Direction _direction = Direction::Right;
 };

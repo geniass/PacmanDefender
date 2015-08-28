@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "GameObject.h"
+#include "Laser.h"
 
 class Player : public GameObject
 {
@@ -13,6 +14,8 @@ public:
     Direction getDirection() { return _direction; };
     void setDirection(Direction d);
     void update(float dt);
+
+    Laser shoot();
 
 private:
     static const float MAX_VELOCITY;

@@ -1,0 +1,15 @@
+**/Debug/
+**/Makefile
+**/*.mk
+**/submit
+**/build/
+Makefile
+.codelite/
+
+.ycm_extra_conf.pyc
+**/*.zip
+
+gtest/lib/
+gtest/include/
+googletest/
+SFML-2.3.1/

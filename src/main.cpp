@@ -31,10 +31,7 @@ int main()
                 window.close();
             } else if (event.type == sf::Event::KeyReleased) {
                 if (event.key.code == sf::Keyboard::Space) {
-                    sf::Vector2f pos = player.getSprite().getPosition();
-                    //Laser l{pos, sf::Vector2f{direction * 400.f, 0.f}};
-                    Laser l{pos};
-                    l.shoot(player.getDirection());
+                    auto l = player.shoot();
                     lasers.push_back(l);
                 }
             }
@@ -67,7 +64,7 @@ int main()
 
             bool intersected = false;
             for (auto e = begin(enemies); e != end(enemies); e++) {
-                if (l->getSprite().getGlobalBounds().intersects(e->getSprite().getGlobalBounds())) {
+                if (l->getSprite()->getGlobalBounds().intersects(e->getSprite()->getGlobalBounds())) {
                     cout << "intersects" << endl;
                     l = lasers.erase(l);
                     enemies.erase(e);
@@ -90,14 +87,14 @@ int main()
         window.clear();
 
         for (auto& l : lasers) {
-            window.draw(l.getSprite());
+            window.draw(*l.getSprite());
         }
 
         for (auto& l : enemies) {
-            window.draw(l.getSprite());
+            window.draw(*l.getSprite());
         }
 
-        window.draw(player.getSprite());
+        window.draw(*player.getSprite());
 
         window.display();
     }
