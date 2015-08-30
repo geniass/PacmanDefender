@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <memory>
+#include <iostream>
 
 using namespace std;
 
@@ -11,7 +12,7 @@ Game::Game(const int gameWidth, const int gameHeight, string title) : _window{sf
     _window.setVerticalSyncEnabled(true);
 }
 
-void Game::addScreen(GameScreenPtr screen)
+void Game::addScreen(shared_ptr<GameScreen> screen)
 {
     _screens.push(screen);
 }
@@ -23,14 +24,13 @@ void Game::removeCurrentScreen()
     }
 }
 
-GameScreenPtr Game::getCurrentScreen()
+shared_ptr<GameScreen> Game::getCurrentScreen()
 {
     if (!_screens.empty()) {
         return _screens.top();
     }
 
-    shared_ptr<GameScreen> ptr;
-    return ptr;
+    return nullptr;
 }
 
 void Game::gameLoop()
@@ -40,13 +40,21 @@ void Game::gameLoop()
         auto screen = getCurrentScreen();
         // while there is a current screen, run the loop
         if (screen == nullptr) {
-            continue;
+            return;
         }
 
-        screen->handleInput(_window);
+        screen = screen->run(_window);
 
-        float dt = clock.restart().asSeconds();
-        screen->update(dt);
-        screen->draw(_window, dt);
+        if (screen == nullptr) {
+            cout << "Removing screen... ";
+            removeCurrentScreen();
+            cout << _screens.size() << endl;
+            continue;
+        } else {
+            cout << "Adding screen... " ;
+            addScreen(screen);
+            cout << _screens.size() << endl;
+            continue;
+        }
     }
 }

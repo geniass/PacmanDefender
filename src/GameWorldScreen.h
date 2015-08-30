@@ -9,9 +9,10 @@ class GameWorldScreen : public GameScreen
 {
 public:
     GameWorldScreen();
-    virtual void draw(sf::RenderWindow& window, const float dt);
-    virtual void update(const float dt);
-    virtual void handleInput(sf::RenderWindow& window);
+    void draw(sf::RenderWindow& window, const float dt);
+    void update(const float dt);
+    void handleInput(sf::RenderWindow& window);
+    virtual shared_ptr<GameScreen> run(sf::RenderWindow& window);
 };
 
 #endif

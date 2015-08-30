@@ -1,4 +1,5 @@
 #include "GameWorldScreen.h"
+#include "MainMenuScreen.h"
 #include "Player.h"
 #include "Laser.h"
 #include <SFML/Graphics.hpp>
@@ -10,8 +11,24 @@ Player target{sf::Vector2f{600,300}};
 list<Laser> lasers;
 list<Player> enemies{target};
 
+bool running = true;
+
 GameWorldScreen::GameWorldScreen()
 {
+}
+
+shared_ptr<GameScreen> GameWorldScreen::run(sf::RenderWindow& window)
+{
+    running = true;
+    sf::Clock clock;
+    while (running) {
+        handleInput(window);
+        float dt = clock.restart().asSeconds();
+        update(dt);
+        draw(window, dt);
+    }
+
+    return make_shared<MainMenuScreen>();
 }
 
 void GameWorldScreen::update(const float dt)
@@ -83,6 +100,9 @@ void GameWorldScreen::handleInput(sf::RenderWindow& window)
             if (event.key.code == sf::Keyboard::Space) {
                 auto l = player.shoot();
                 lasers.push_back(l);
+            } else if (event.key.code == sf::Keyboard::Escape) {
+                running = false;
+                return;
             }
         }
     }
