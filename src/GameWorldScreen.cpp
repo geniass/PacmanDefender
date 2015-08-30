@@ -1,34 +1,37 @@
 #include "GameWorldScreen.h"
-#include "MainMenuScreen.h"
+#include "PauseScreen.h"
 #include "Player.h"
 #include "Laser.h"
 #include <SFML/Graphics.hpp>
 #include <list>
+#include <iostream>
 
-Player player;
-Player target{sf::Vector2f{600,300}};
-
-list<Laser> lasers;
-list<Player> enemies{target};
-
-bool running = true;
+using namespace std;
 
 GameWorldScreen::GameWorldScreen()
 {
+    running = true;
+    paused = false;
+    cout << running << endl;
 }
 
 shared_ptr<GameScreen> GameWorldScreen::run(sf::RenderWindow& window)
 {
-    running = true;
+    if (!running) {
+        // user chose exit on pause menu
+        return nullptr;
+    }
+
+    paused = false;
     sf::Clock clock;
-    while (running) {
+    while (!paused) {
         handleInput(window);
         float dt = clock.restart().asSeconds();
         update(dt);
         draw(window, dt);
     }
 
-    return make_shared<MainMenuScreen>();
+    return make_shared<PauseScreen>(this);
 }
 
 void GameWorldScreen::update(const float dt)
@@ -101,9 +104,15 @@ void GameWorldScreen::handleInput(sf::RenderWindow& window)
                 auto l = player.shoot();
                 lasers.push_back(l);
             } else if (event.key.code == sf::Keyboard::Escape) {
-                running = false;
+                paused = true;
                 return;
             }
         }
     }
+}
+
+void GameWorldScreen::quit()
+{
+    cout << "Quit" << endl;
+    running = false;
 }

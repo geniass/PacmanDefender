@@ -1,4 +1,4 @@
-#include "MainMenuScreen.h"
+#include "PauseScreen.h"
 #include <iostream>
 #include <memory>
 #include "GameScreen.h"
@@ -6,20 +6,20 @@
 
 #include <SFML/Graphics.hpp>
 
-MainMenuScreen::MainMenuScreen()
+PauseScreen::PauseScreen(GameWorldScreen* gameWorldScreen) : _gameWorldScreen{gameWorldScreen}
 {
 }
 
-shared_ptr<GameScreen> MainMenuScreen::run(sf::RenderWindow &window)
+shared_ptr<GameScreen> PauseScreen::run(sf::RenderWindow &window)
 {
     sf::Event Event;
     bool Running = true;
     sf::Texture Texture;
     sf::Sprite Sprite;
     sf::Font Font;
-    sf::Text PlayText;
     sf::Text QuitText;
-    sf::Text* selectedText = &PlayText;
+    sf::Text ContinueText;
+    sf::Text* selectedText = &ContinueText;
 
     if (!Texture.loadFromFile("resources/pacman.png"))
     {
@@ -34,15 +34,15 @@ shared_ptr<GameScreen> MainMenuScreen::run(sf::RenderWindow &window)
         return nullptr;
     }
 
-    PlayText.setFont(Font);
-    PlayText.setCharacterSize(20);
-    PlayText.setString("Play");
-    PlayText.setPosition({ 280.f, 160.f });
-
     QuitText.setFont(Font);
     QuitText.setCharacterSize(20);
     QuitText.setString("Exit");
     QuitText.setPosition({ 280.f, 220.f });
+
+    ContinueText.setFont(Font);
+    ContinueText.setCharacterSize(20);
+    ContinueText.setString("Continue");
+    ContinueText.setPosition({ 280.f, 160.f });
 
     while (Running)
     {
@@ -50,6 +50,7 @@ shared_ptr<GameScreen> MainMenuScreen::run(sf::RenderWindow &window)
         {
             if (Event.type == sf::Event::Closed)
             {
+                _gameWorldScreen->quit();
                 return nullptr;
             }
             if (Event.type == sf::Event::KeyPressed)
@@ -57,19 +58,21 @@ shared_ptr<GameScreen> MainMenuScreen::run(sf::RenderWindow &window)
                 switch (Event.key.code)
                 {
                 case sf::Keyboard::Up:
-                    selectedText = &PlayText;
+                    selectedText = &ContinueText;
                     break;
                 case sf::Keyboard::Down:
                     selectedText = &QuitText;
                     break;
                 case sf::Keyboard::Return:
-                    if (selectedText == &PlayText)
+                    if (selectedText == &ContinueText)
                     {
-                        cout << "Play" << endl;
-                         return make_shared<GameWorldScreen>();
+                        cout << "Continue" << endl;
+                        return nullptr;
                     }
                     else
                     {
+                        // quit selected
+                        _gameWorldScreen->quit();
                         return nullptr;
                     }
                     break;
@@ -78,20 +81,20 @@ shared_ptr<GameScreen> MainMenuScreen::run(sf::RenderWindow &window)
                 }
             }
         }
-        if (selectedText == &PlayText)
+        if (selectedText == &ContinueText)
         {
-            PlayText.setColor(sf::Color(255, 0, 0, 255));
             QuitText.setColor(sf::Color(255, 255, 255, 255));
+            ContinueText.setColor(sf::Color(255, 0, 0, 255));
         }
         else
         {
-            PlayText.setColor(sf::Color(255, 255, 255, 255));
             QuitText.setColor(sf::Color(255, 0, 0, 255));
+            ContinueText.setColor(sf::Color(255, 255, 255, 255));
         }
 
         window.clear();
         window.draw(Sprite);
-        window.draw(PlayText);
+        window.draw(ContinueText);
         window.draw(QuitText);
         window.display();
     }

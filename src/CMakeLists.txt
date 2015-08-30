@@ -22,7 +22,7 @@ set( CMAKE_EXPORT_COMPILE_COMMANDS 1 )
 # Normal Libraries & Executables
 ################################
 #add_library(text-query-system_lib Line.cpp Word.cpp Paragraph.cpp)
-add_executable(${EXECUTABLE_NAME} main.cpp Game.cpp MainMenuScreen.cpp GameWorldScreen.cpp Laser.cpp Player.cpp)
+add_executable(${EXECUTABLE_NAME} main.cpp Game.cpp PauseScreen.cpp MainMenuScreen.cpp GameWorldScreen.cpp Laser.cpp Player.cpp)
 #target_link_libraries(GameTest text-query-system_lib)
 # Key idea: SEPARATE OUT your main() function into its own file so it can be its
 # own executable. Separating out main() means you can add this library to be
