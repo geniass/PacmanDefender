@@ -50,6 +50,7 @@ shared_ptr<GameScreen> PauseScreen::run(sf::RenderWindow &window)
         {
             if (Event.type == sf::Event::Closed)
             {
+                window.close();
                 _gameWorldScreen->quit();
                 return nullptr;
             }

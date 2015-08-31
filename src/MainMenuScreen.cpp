@@ -50,6 +50,7 @@ shared_ptr<GameScreen> MainMenuScreen::run(sf::RenderWindow &window)
         {
             if (Event.type == sf::Event::Closed)
             {
+                window.close();
                 return nullptr;
             }
             if (Event.type == sf::Event::KeyPressed)
