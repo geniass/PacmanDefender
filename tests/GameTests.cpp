@@ -1,4 +1,4 @@
-#include "Laser.h"
+#include "../src/Laser.h"
 
 #include <gtest/gtest.h>
 
